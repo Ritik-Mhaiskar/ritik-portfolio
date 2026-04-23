@@ -125,21 +125,41 @@
         .stat-item h3 { color: var(--accent); font-size: 1.8rem; margin-bottom: 0.25rem; }
         .stat-item span { font-size: 0.75rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
 
-        .skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+        /* Modified Technical Core layout for laptop focus */
+        .skills-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
+            gap: 1.5rem; 
+            justify-content: start;
+        }
         .skill-card { 
-            background: var(--bg-card); padding: 2rem; border-radius: 18px; 
-            border: 1px solid var(--border); transition: var(--transition);
+            background: var(--bg-card); 
+            padding: 2.2rem; 
+            border-radius: 18px; 
+            border: 1px solid var(--border); 
+            transition: var(--transition);
+            text-align: left; /* Ensure left alignment */
         }
         .skill-card:hover { border-color: var(--accent); box-shadow: var(--shadow); }
-        .skill-card h3 { margin-bottom: 1.25rem; font-size: 1.15rem; display: flex; align-items: center; gap: 12px; }
+        .skill-card h3 { 
+            margin-bottom: 1.5rem; 
+            font-size: 1.1rem; 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+            font-weight: 700;
+            color: var(--text-main);
+        }
         .skill-card i { color: var(--accent); font-size: 1.2rem; }
         
-        .tag-container { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+        .tag-container { display: flex; flex-wrap: wrap; gap: 0.6rem; justify-content: flex-start; }
         .tag {
             background: var(--accent-soft); color: var(--accent);
-            padding: 5px 12px; border-radius: 8px; font-size: 0.8rem; font-weight: 600;
+            padding: 6px 14px; border-radius: 8px; font-size: 0.8rem; font-weight: 600;
             border: 1px solid rgba(16, 185, 129, 0.1);
+            transition: var(--transition);
         }
+        .tag:hover { background: var(--accent); color: white; }
 
         .timeline { border-left: 2px solid var(--border); padding-left: 2rem; margin-left: 1rem; }
         .timeline-item { position: relative; margin-bottom: 3.5rem; }
@@ -199,6 +219,7 @@
             .btn-group { justify-content: center; }
             .btn { width: 100%; max-width: 350px; }
             .nav-right { gap: 1rem; }
+            .skills-grid { justify-content: center; }
         }
     </style>
 </head>
@@ -256,8 +277,9 @@
         </div>
     </section>
 
-    <section id="skills" style="background: var(--bg-card); border-radius: 30px; margin: 2rem 5%;">
-        <div class="section-header" style="text-align: center;">
+    <!-- Refined Skills Section focused on Laptop Layout -->
+    <section id="skills" style="background: var(--bg-card); border-radius: 30px; margin: 2rem 5%; padding: 4rem 3rem;">
+        <div class="section-header">
             <h2 class="section-title">Technical <span>Core</span></h2>
         </div>
         <div class="skills-grid">
