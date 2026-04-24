@@ -3,488 +3,708 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ritik Mhaiskar | Control & PLC Engineer</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <title>Ritik Mhaiskar | Control & PLC Engineer Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://unpkg.com/scrollreveal"></script>
+    
     <style>
         :root {
-            --bg-body: #f8fafc;
-            --bg-nav: rgba(248, 250, 252, 0.9);
-            --bg-card: #ffffff;
-            --text-main: #0f172a;
-            --text-muted: #475569;
-            --accent: #059669; 
-            --accent-soft: #ecfdf5;
-            --border: #e2e8f0;
-            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-            --transition: all 0.3s ease;
-            --section-gap: clamp(40px, 8vh, 80px);
-        }
-
-        [data-theme="dark"] {
+            /* SaaS Indigo Palette */
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --primary-light: #818cf8;
+            --secondary: #10b981; /* Emerald */
             --bg-body: #0f172a;
-            --bg-nav: rgba(15, 23, 42, 0.9);
             --bg-card: #1e293b;
-            --text-main: #f1f5f9;
+            --bg-glass: rgba(15, 23, 42, 0.8);
+            --text-main: #f8fafc;
             --text-muted: #94a3b8;
-            --accent: #10b981;
-            --accent-soft: rgba(16, 185, 129, 0.1);
-            --border: #334155;
-            --shadow: 0 10px 15px -3px rgb(0 0 0 / 0.3);
+            --border: rgba(255, 255, 255, 0.08);
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        html { scroll-behavior: smooth; overflow-x: hidden; font-size: 16px; }
+        [data-theme="light"] {
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --bg-glass: rgba(255, 255, 255, 0.8);
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border: rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 10px 15px -3px rgb(0 0 0 / 0.05);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+        
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Plus Jakarta Sans', sans-serif;
             background-color: var(--bg-body);
             color: var(--text-main);
             line-height: 1.6;
-            transition: background-color 0.4s ease, color 0.4s ease;
-            width: 100%;
+            transition: background-color 0.4s ease;
+            overflow-x: hidden;
+            position: relative;
         }
 
+        /* --- LIVE ANIMATION CANVAS --- */
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        /* --- NAVIGATION --- */
         nav {
-            position: fixed; top: 0; width: 100%;
-            padding: 0.75rem 5%;
-            display: flex; justify-content: space-between; align-items: center;
-            background: var(--bg-nav);
-            backdrop-filter: blur(12px);
+            position: fixed;
+            top: 0; width: 100%;
+            padding: 1.25rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--bg-glass);
             border-bottom: 1px solid var(--border);
             z-index: 1000;
-        }
-
-        .logo-container {
-            display: flex; align-items: center; gap: 10px;
-            text-decoration: none; padding: 4px 12px; border-radius: 8px;
+            backdrop-filter: blur(12px);
             transition: var(--transition);
         }
-        .logo-container:hover { background: var(--accent-soft); }
-
-        .plc-status { display: flex; flex-direction: column; gap: 3px; }
-        .status-light { width: 8px; height: 8px; border-radius: 50%; background: #94a3b8; border: 1px solid rgba(0,0,0,0.1); }
-        .status-light.run { background: #10b981; box-shadow: 0 0 8px #10b981; animation: pulse-status 2s infinite; }
-
-        @keyframes pulse-status { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
-
-        .logo { font-weight: 800; font-size: 1.1rem; letter-spacing: -0.5px; font-family: 'JetBrains Mono', monospace; color: var(--text-main); }
-        .logo span { color: var(--accent); }
-
-        .nav-right { display: flex; align-items: center; gap: 2rem; }
-        .nav-links { display: flex; list-style: none; gap: 1.5rem; }
-        .nav-links a { text-decoration: none; color: var(--text-muted); font-weight: 600; font-size: 0.85rem; transition: var(--transition); }
-        .nav-links a:hover { color: var(--accent); }
-
-        .theme-toggle {
-            background: var(--bg-card); border: 1px solid var(--border);
-            color: var(--text-main); width: 38px; height: 38px;
-            border-radius: 10px; cursor: pointer; display: flex;
-            align-items: center; justify-content: center; transition: var(--transition);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-        .theme-toggle:hover { border-color: var(--accent); color: var(--accent); transform: scale(1.05); }
-
-        #hero {
-            min-height: 85vh; display: flex; flex-direction: column;
-            justify-content: center; padding: 120px 5% 40px;
-            max-width: 1200px; margin: 0 auto;
-        }
-
-        .hero-pre { color: var(--accent); font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; font-size: 0.75rem; margin-bottom: 0.75rem; display: block; }
-        #hero h1 { font-size: clamp(2.5rem, 8vw, 4.2rem); font-weight: 800; margin-bottom: 1rem; line-height: 1.05; letter-spacing: -1px; }
-        #hero p { font-size: clamp(1.1rem, 3.5vw, 1.25rem); color: var(--text-muted); max-width: 800px; margin-bottom: 2.5rem; }
-
-        .btn-group { display: flex; flex-wrap: wrap; gap: 1rem; }
-        .btn {
-            padding: 0.85rem 2rem; border-radius: 10px; font-weight: 600;
-            text-decoration: none; transition: var(--transition);
-            display: inline-flex; align-items: center; gap: 10px; font-size: 0.95rem;
-            cursor: pointer; border: none;
-        }
-        .btn-primary { background: var(--accent); color: white; box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3); }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4); }
-        .btn-secondary { border: 1px solid var(--border); color: var(--text-main); background: transparent; }
-        .btn-secondary:hover { background: var(--bg-card); border-color: var(--accent); }
-
-        section { padding: var(--section-gap) 5%; max-width: 1200px; margin: 0 auto; }
-        .section-header { margin-bottom: 3rem; }
-        .section-title { font-size: clamp(1.8rem, 4vw, 2.5rem); font-weight: 800; margin-bottom: 0.5rem; letter-spacing: -0.5px; }
-        .section-title span { color: var(--accent); }
-        .section-subtitle { color: var(--text-muted); font-size: 1rem; font-weight: 500; }
-
-        .about-content { display: grid; grid-template-columns: 1.4fr 1fr; gap: 4rem; align-items: start; }
-        .about-text p { margin-bottom: 1.25rem; color: var(--text-muted); font-size: 1.05rem; }
-
-        .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem; }
-        .stat-item {
-            background: var(--bg-card); padding: 1.5rem; border-radius: 16px;
-            border: 1px solid var(--border); text-align: center;
-            transition: var(--transition);
-        }
-        .stat-item:hover { border-color: var(--accent); transform: scale(1.02); }
-        .stat-item h3 { color: var(--accent); font-size: 1.8rem; margin-bottom: 0.25rem; }
-        .stat-item span { font-size: 0.75rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
-
-        .skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
-        .skill-card { 
-            background: var(--bg-card); padding: 2rem; border-radius: 18px; 
-            border: 1px solid var(--border); transition: var(--transition);
-        }
-        .skill-card:hover { border-color: var(--accent); box-shadow: var(--shadow); }
-        .skill-card h3 { margin-bottom: 1.25rem; font-size: 1.15rem; display: flex; align-items: center; gap: 12px; }
-        .skill-card i { color: var(--accent); font-size: 1.2rem; }
         
-        .tag-container { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-        .tag {
-            background: var(--accent-soft); color: var(--accent);
-            padding: 5px 12px; border-radius: 8px; font-size: 0.8rem; font-weight: 600;
-            border: 1px solid rgba(16, 185, 129, 0.1);
+        nav.scrolled {
+            padding: 0.75rem 5%;
+            box-shadow: var(--shadow-md);
+            background: var(--bg-glass);
         }
 
-        .timeline { border-left: 2px solid var(--border); padding-left: 2rem; margin-left: 1rem; }
-        .timeline-item { position: relative; margin-bottom: 3.5rem; }
-        .timeline-item:last-child { margin-bottom: 0; }
-        .timeline-item::before {
-            content: ''; position: absolute; left: calc(-2rem - 9px); top: 8px;
-            width: 16px; height: 16px; background: var(--accent); border-radius: 50%;
-            border: 4px solid var(--bg-body); box-shadow: 0 0 0 4px var(--accent-soft);
+        .logo { 
+            font-weight: 800; 
+            font-size: 1.25rem; 
+            text-decoration: none; 
+            color: var(--text-main); 
+            letter-spacing: -0.5px;
         }
-        .timeline-date { color: var(--accent); font-weight: 800; font-size: 0.85rem; margin-bottom: 0.5rem; text-transform: uppercase; }
-        .timeline-content h3 { font-size: 1.3rem; margin-bottom: 0.25rem; letter-spacing: -0.2px; }
-        .timeline-company { font-weight: 700; color: var(--text-muted); margin-bottom: 1rem; font-size: 1rem; }
-        .timeline-list { list-style: none; color: var(--text-muted); font-size: 0.95rem; }
-        .timeline-list li { margin-bottom: 0.6rem; padding-left: 1.5rem; position: relative; line-height: 1.4; }
-        .timeline-list li::before { content: '→'; position: absolute; left: 0; color: var(--accent); font-weight: bold; }
+        
+        .logo span { color: var(--primary-light); }
 
-        .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 1.5rem; }
-        .project-card { 
-            background: var(--bg-card); padding: 2rem; border-radius: 18px; 
-            border: 1px solid var(--border); transition: var(--transition);
-            display: flex; flex-direction: column;
+        .nav-links { display: flex; gap: 2rem; align-items: center; }
+        
+        .nav-links a { 
+            text-decoration: none; 
+            color: var(--text-muted); 
+            font-weight: 600; 
+            font-size: 0.875rem; 
+            transition: var(--transition); 
         }
-        .project-card:hover { transform: translateY(-8px); border-color: var(--accent); box-shadow: var(--shadow); }
-        .project-header { display: flex; justify-content: space-between; align-items: start; margin-bottom: 1.25rem; }
-        .project-category { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; color: var(--accent); letter-spacing: 1.2px; }
-        .project-card h4 { font-size: 1.25rem; margin-bottom: 1rem; letter-spacing: -0.3px; }
-        .project-card p { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1.5rem; flex-grow: 1; }
+        
+        .nav-links a:hover, .nav-links a.active { color: var(--primary-light); }
 
-        .contact-grid { display: grid; grid-template-columns: 1fr 1.4fr; gap: 4rem; }
-        .contact-info-card { display: flex; align-items: center; gap: 1.25rem; margin-bottom: 2rem; }
-        .contact-icon {
-            min-width: 50px; height: 50px; background: var(--accent-soft);
-            color: var(--accent); border-radius: 12px; display: flex;
-            align-items: center; justify-content: center; font-size: 1.25rem;
+        /* --- HIGHLIGHT BAR --- */
+        .highlight-bar {
+            background: var(--bg-glass);
+            backdrop-filter: blur(5px);
+            border-bottom: 1px solid var(--border);
+            padding: 1.5rem 5%;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-top: 72px;
+            position: relative;
+            z-index: 10;
         }
-        .contact-details p { font-weight: 700; font-size: 1rem; }
-        .contact-details span { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; font-weight: 600; }
 
-        .form-group { margin-bottom: 1.25rem; }
-        .form-control {
-            width: 100%; padding: 1rem; background: var(--bg-card);
-            border: 1px solid var(--border); border-radius: 10px;
-            color: var(--text-main); font-family: inherit; font-size: 0.95rem;
+        .h-item { text-align: center; border-right: 1px solid var(--border); }
+        .h-item:last-child { border-right: none; }
+        .h-value { display: block; font-weight: 800; color: var(--primary-light); font-size: 1.25rem; margin-bottom: 4px; }
+        .h-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); font-weight: 700; }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            padding: 100px 5%;
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 4rem;
+            align-items: center;
+            min-height: 80vh;
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .hero-tag { 
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--secondary);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .hero h1 { 
+            font-size: clamp(2.5rem, 6vw, 4.25rem); 
+            font-weight: 800; 
+            line-height: 1.1; 
+            margin-bottom: 1.5rem; 
+            letter-spacing: -1px;
+        }
+        
+        .hero h1 span { 
+            background: linear-gradient(135deg, var(--primary-light), var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p { 
+            font-size: 1.125rem; 
+            color: var(--text-muted); 
+            margin-bottom: 2.5rem; 
+            max-width: 600px;
+            line-height: 1.7;
+        }
+
+        /* --- BUTTONS --- */
+        .btn-group { display: flex; gap: 1rem; flex-wrap: wrap; }
+        
+        .btn {
+            padding: 0.9rem 2rem;
+            border-radius: var(--radius-md);
+            font-weight: 700;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
             transition: var(--transition);
+            font-size: 0.95rem;
+            cursor: pointer;
+            border: none;
         }
-        .form-control:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); }
 
-        footer { padding: 3rem 5%; text-align: center; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 0.9rem; }
-        .footer-socials { display: flex; justify-content: center; gap: 1.5rem; margin-bottom: 1.5rem; }
-        .footer-socials a { color: var(--text-muted); font-size: 1.25rem; transition: var(--transition); }
-        .footer-socials a:hover { color: var(--accent); }
+        .btn-primary { 
+            background: var(--primary);
+            color: white; 
+            box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.3);
+        }
+        .btn-primary:hover { 
+            background: var(--primary-dark);
+            transform: translateY(-3px); 
+            box-shadow: 0 20px 25px -5px rgba(79, 70, 229, 0.4); 
+        }
+        
+        .btn-outline { 
+            background: transparent; 
+            border: 2px solid var(--border); 
+            color: var(--text-main); 
+        }
+        .btn-outline:hover { 
+            background: var(--border); 
+            border-color: var(--primary-light);
+            transform: translateY(-2px); 
+        }
 
-        @media (max-width: 900px) {
-            .about-content, .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
-            .nav-links { display: none; }
-            #hero { min-height: 60vh; padding-top: 150px; text-align: center; }
+        /* --- RESUME SUMMARY CARD --- */
+        .resume-summary {
+            background: var(--bg-glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            padding: 2.5rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            position: relative;
+            overflow: hidden;
+            animation: floatLarge 6s ease-in-out infinite;
+        }
+
+        @keyframes floatLarge {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(1deg); }
+        }
+        
+        .resume-summary::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 4px; height: 100%;
+            background: var(--primary);
+        }
+
+        .summary-header { border-bottom: 1px solid var(--border); padding-bottom: 1.25rem; margin-bottom: 1.5rem; }
+        .summary-header h3 { font-size: 1.4rem; margin-bottom: 0.25rem; }
+        .summary-header p { font-size: 0.9rem; color: var(--primary-light); font-weight: 700; }
+        
+        .summary-item { margin-bottom: 1.25rem; }
+        .summary-item strong { display: block; color: var(--text-muted); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+        .summary-item span { font-weight: 600; font-size: 0.95rem; }
+
+        /* --- SECTION STRUCTURE --- */
+        section { padding: 100px 5%; max-width: 1400px; margin: 0 auto; position: relative; }
+        
+        .section-header { margin-bottom: 4rem; }
+        .section-title { font-size: 2.5rem; font-weight: 800; margin-bottom: 1rem; position: relative; display: inline-block; }
+        .section-title::after { content: ''; position: absolute; bottom: -8px; left: 0; width: 40px; height: 4px; background: var(--primary); border-radius: 2px; }
+
+        /* --- ABOUT & ACHIEVEMENTS --- */
+        .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; }
+        .about-text p { margin-bottom: 1.75rem; color: var(--text-muted); font-size: 1.1rem; line-height: 1.8; }
+        
+        .about-bullets { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-top: 2rem; }
+        .about-bullets li { font-size: 0.95rem; font-weight: 600; display: flex; align-items: center; gap: 10px; }
+        .about-bullets i { color: var(--secondary); font-size: 1.1rem; }
+
+        .achievements-list { display: grid; grid-template-columns: 1fr; gap: 1.25rem; }
+        .achievement-card {
+            background: var(--bg-glass);
+            backdrop-filter: blur(5px);
+            padding: 1.75rem;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            transition: var(--transition);
+            cursor: pointer;
+            text-align: left;
+            width: 100%;
+            position: relative;
+        }
+        .achievement-card:hover { 
+            transform: translateY(-5px) scale(1.02); 
+            border-color: var(--primary-light); 
+            box-shadow: 0 15px 30px -10px rgba(79, 70, 229, 0.2);
+            background: rgba(79, 70, 229, 0.08); 
+        }
+        .achievement-card i { font-size: 1.5rem; color: var(--primary-light); background: rgba(79, 70, 229, 0.1); padding: 15px; border-radius: 12px; flex-shrink: 0; transition: var(--transition); }
+        .achievement-card:hover i { transform: rotate(10deg); color: #fff; background: var(--primary); }
+        
+        .achievement-card p { font-weight: 700; font-size: 1rem; line-height: 1.4; color: var(--text-main); }
+        .achievement-card .view-hint { margin-left: auto; color: var(--primary-light); font-size: 0.8rem; font-weight: 700; opacity: 0; transform: translateX(-10px); transition: var(--transition); }
+        .achievement-card:hover .view-hint { opacity: 1; transform: translateX(0); }
+
+        /* --- MODAL STYLES --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .modal-content {
+            background: var(--bg-card);
+            max-width: 700px;
+            width: 100%;
+            border-radius: 24px;
+            border: 1px solid var(--border);
+            position: relative;
+            animation: modalSlide 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+            max-height: 90vh;
+        }
+
+        @keyframes modalSlide {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-header {
+            padding: 2rem;
+            background: linear-gradient(to right, rgba(79, 70, 229, 0.1), transparent);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-body { padding: 2.5rem; overflow-y: auto; }
+        
+        .close-modal {
+            background: var(--border); border: none; color: var(--text-muted);
+            width: 36px; height: 36px; border-radius: 50%;
+            font-size: 1.2rem; cursor: pointer; transition: var(--transition);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .close-modal:hover { color: var(--text-main); transform: rotate(90deg); background: var(--primary); }
+
+        /* --- CONTACT & MESSAGE --- */
+        .contact-container { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+        .message-form { 
+            background: var(--bg-glass); 
+            backdrop-filter: blur(10px);
+            padding: 2.5rem; 
+            border-radius: 24px; 
+            border: 1px solid var(--border); 
+            box-shadow: var(--shadow-md); 
+        }
+        .form-control { 
+            width: 100%; 
+            background: var(--bg-body); 
+            border: 2px solid var(--border); 
+            border-radius: 12px; 
+            padding: 12px 16px; 
+            color: var(--text-main); 
+            font-family: inherit; 
+            font-size: 1rem; 
+            transition: var(--transition); 
+        }
+        .form-control:focus { border-color: var(--primary-light); outline: none; box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1); }
+
+        @media (max-width: 1024px) {
+            .hero, .about-grid, .contact-container { grid-template-columns: 1fr; gap: 3rem; }
+            .hero, .contact-content { text-align: center; }
+            .hero p { margin-left: auto; margin-right: auto; }
             .btn-group { justify-content: center; }
-            .btn { width: 100%; max-width: 350px; }
-            .nav-right { gap: 1rem; }
+            .highlight-bar { grid-template-columns: repeat(2, 1fr); gap: 2rem; }
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+            100% { opacity: 1; transform: scale(1); }
         }
     </style>
 </head>
 <body data-theme="dark">
 
-    <nav>
-        <a href="#hero" class="logo-container">
-            <div class="plc-status">
-                <div class="status-light run" title="System Running"></div>
-                <div class="status-light" title="Safety Interlock OK"></div>
-            </div>
-            <div class="logo">RITIK<span>.M</span></div>
-        </a>
-        <div class="nav-right">
-            <ul class="nav-links">
-                <li><a href="#about">About</a></li>
-                <li><a href="#skills">Skills</a></li>
-                <li><a href="#experience">Experience</a></li>
-                <li><a href="#projects">Portfolio</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-            <button class="theme-toggle" id="themeToggle" title="Toggle Dark/Light Mode">
-                <i class="fas fa-moon"></i>
-            </button>
+    <canvas id="bg-canvas"></canvas>
+
+    <nav id="navbar">
+        <a href="#" class="logo">RITIK<span>MHAISKAR</span></a>
+        <div class="nav-links">
+            <a href="#about">About</a>
+            <a href="#projects">Projects</a>
+            <button id="themeToggle" style="background:none; border:none; color:var(--text-main); cursor:pointer; font-size: 1.1rem; padding: 0.5rem;"><i class="fas fa-moon"></i></button>
+            <a href="#contact" class="btn btn-primary" style="padding: 0.6rem 1.4rem; font-size: 0.85rem;">HIRE ME</a>
         </div>
     </nav>
 
-    <section id="hero">
-        <span class="hero-pre">Control & PLC Engineer | SIL-3 Safety Expert</span>
-        <h1>Engineering Reliable Automation Systems</h1>
-        <p>Specializing in <strong>Siemens S7-400H/FH</strong>, <strong>PCS 7</strong>, and <strong>Fail-Safe (SIL-3)</strong> systems. 3+ years of experience delivering robust automation for high-criticality compressors in Oil & Gas and Offshore environments.</p>
-        <div class="btn-group">
-            <a href="#contact" class="btn btn-primary">Work with Me</a>
-            <a href="#experience" class="btn btn-secondary">Professional History</a>
+    <!-- HIGHLIGHTS -->
+    <div class="highlight-bar">
+        <div class="h-item">
+            <span class="h-value">3.5+ Years</span>
+            <span class="h-label">Industrial Exp.</span>
+        </div>
+        <div class="h-item">
+            <span class="h-value">10+ Global</span>
+            <span class="h-label">Key Projects</span>
+        </div>
+        <div class="h-item">
+            <span class="h-value">Oil & Gas</span>
+            <span class="h-label">Primary Domain</span>
+        </div>
+        <div class="h-item">
+            <span class="h-value">Pune / Remote</span>
+            <span class="h-label">Availability</span>
+        </div>
+    </div>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-tag">
+                <i class="fas fa-circle" style="font-size: 8px; animation: pulse 2s infinite;"></i>
+                Available for Immediate Joining
+            </div>
+            <h1>Control & <span>PLC Engineer</span> For Critical Systems</h1>
+            <p>Specializing in high-availability automation, Siemens PCS 7, and Fail-Safe (SIL-3) architectures. Proven expertise in compressor automation and global field commissioning.</p>
+            <div class="btn-group">
+                <button onclick="downloadResume()" class="btn btn-primary">
+                    <i class="fas fa-file-download"></i> Download Resume
+                </button>
+                <a href="#about" class="btn btn-outline">Technical Skills</a>
+            </div>
+        </div>
+        
+        <div class="resume-summary">
+            <div class="summary-header">
+                <h3>Ritik V. Mhaiskar</h3>
+                <p>Siemens Automation Professional</p>
+            </div>
+            <div class="summary-item">
+                <strong>Core Ecosystem</strong>
+                <span>PCS 7, TIA Portal, STEP 7, WinCC</span>
+            </div>
+            <div class="summary-item">
+                <strong>Safety & Reliability</strong>
+                <span>SIL-3 Architecture, Fail-Safe PLC, ESD</span>
+            </div>
+            <div class="summary-item">
+                <strong>Key Expertise</strong>
+                <span>Centrifugal & Reciprocating Compressors</span>
+            </div>
+            <div class="summary-item">
+                <strong>Base Location</strong>
+                <span>Pune / Wardha, India</span>
+            </div>
         </div>
     </section>
 
+    <!-- ABOUT & ACHIEVEMENTS -->
     <section id="about">
         <div class="section-header">
-            <h2 class="section-title">Professional <span>Summary</span></h2>
-            <p class="section-subtitle">A blend of technical precision and safety-first engineering.</p>
+            <h2 class="section-title">Professional Profile</h2>
         </div>
-        <div class="about-content">
+        <div class="about-grid">
             <div class="about-text">
-                <p>Results-driven Engineer with 3+ years of industrial experience. My core focus is <strong>Siemens Fail-Safe Systems (SIL-3)</strong> and complex SCADA integration across global energy sectors.</p>
-                <p>Proven ability to manage the entire lifecycle of a project—from logic development in <strong>TIA Portal</strong> to final on-site commissioning (FAT/SAT). I specialize in centrifugal and reciprocating compressor automation for world-class clients like <strong>Siemens Energy</strong>.</p>
-                <p>Recently completed high-stakes offshore commissioning in <strong>Vietnam</strong>, ensuring 100% compliance with SIL-3 safety architecture and offshore standards for gas compressors.</p>
+                <p>With a career focused on the <strong>Siemens automation stack</strong>, I have spent the last 3.5 years architecting and commissioning control systems for mission-critical industrial assets.</p>
+                <p>I bring specialized experience in <strong>Offshore Commissioning</strong> (Vietnam) and high-level FAT/SAT leadership. Expert in bridging complex PLC logic with real-world field dynamics.</p>
+                <ul class="about-bullets">
+                    <li><i class="fas fa-check-circle"></i> Offshore Experience (Vietnam)</li>
+                    <li><i class="fas fa-check-circle"></i> SIL-3 Safety Matrix Design</li>
+                    <li><i class="fas fa-check-circle"></i> FAT / SAT System Ownership</li>
+                    <li><i class="fas fa-check-circle"></i> Multi-Protocol Connectivity</li>
+                </ul>
             </div>
-            <div class="stats-grid">
-                <div class="stat-item"><h3>3.5+</h3><span>Years Experience</span></div>
-                <div class="stat-item"><h3>SIL-3</h3><span>Safety Systems</span></div>
-                <div class="stat-item"><h3>Vietnam</h3><span>Offshore Exp</span></div>
-                <div class="stat-item"><h3>S7-400H</h3><span>Hardware Expertise</span></div>
-            </div>
-        </div>
-    </section>
-
-    <section id="skills" style="background: var(--bg-card); border-radius: 30px; margin: 2rem 5%;">
-        <div class="section-header" style="text-align: center;">
-            <h2 class="section-title">Technical <span>Core</span></h2>
-        </div>
-        <div class="skills-grid">
-            <div class="skill-card">
-                <h3><i class="fas fa-microchip"></i> PLC & Control Systems</h3>
-                <div class="tag-container">
-                    <span class="tag">Siemens S7-400H/FH</span>
-                    <span class="tag">S7-1500F / 1200</span>
-                    <span class="tag">S7-300 / 200</span>
-                    <span class="tag">Fail-Safe (F-Systems)</span>
-                    <span class="tag">PCS 7 Configuration</span>
-                </div>
-            </div>
-            <div class="skill-card">
-                <h3><i class="fas fa-code"></i> Engineering Software</h3>
-                <div class="tag-container">
-                    <span class="tag">TIA Portal</span>
-                    <span class="tag">STEP 7 (Simatic Manager)</span>
-                    <span class="tag">WinCC SCADA</span>
-                    <span class="tag">HMI Development</span>
-                    <span class="tag">Safety Loop Validation</span>
-                </div>
-            </div>
-            <div class="skill-card">
-                <h3><i class="fas fa-network-wired"></i> Communication & I/O</h3>
-                <div class="tag-container">
-                    <span class="tag">Profinet / Profibus</span>
-                    <span class="tag">Modbus RTU / TCP-IP</span>
-                    <span class="tag">DNP-3 Protocol</span>
-                    <span class="tag">Siemens VFD Drives</span>
-                    <span class="tag">Fail-Safe I/O Modules</span>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="experience">
-        <div class="section-header">
-            <h2 class="section-title">Professional <span>Timeline</span></h2>
-        </div>
-        <div class="timeline">
-            <div class="timeline-item">
-                <div class="timeline-date">2023 — Present</div>
-                <div class="timeline-content">
-                    <h3>Control Engineer</h3>
-                    <div class="timeline-company">Matrix Automation System</div>
-                    <ul class="timeline-list">
-                        <li>Developing complex PLC logic using TIA Portal, STEP 7, and PCS 7 for global energy clients.</li>
-                        <li>Coordinating with <strong>Siemens Energy</strong> for high-criticality automation solutions.</li>
-                        <li>Integrating PLC systems with VFDs, SCADA, and diverse field instrumentation.</li>
-                        <li>Leading FAT/SAT activities and troubleshooting critical safety systems on-site.</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="timeline-item">
-                <div class="timeline-date">2022 — 2023</div>
-                <div class="timeline-content">
-                    <h3>Quality Engineer</h3>
-                    <div class="timeline-company">Avirata Defence System</div>
-                    <ul class="timeline-list">
-                        <li>Inspected high-reliability cable harness systems for defense applications.</li>
-                        <li>Ensured strict adherence to defense-grade quality standards.</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="timeline-item">
-                <div class="timeline-date">2020 — 2022</div>
-                <div class="timeline-content">
-                    <h3>Production Associate</h3>
-                    <div class="timeline-company">Amphenol Interconnect India Ltd</div>
-                    <ul class="timeline-list">
-                        <li>Managed high-precision cable assembly workflows.</li>
-                        <li>Coordinated with QA teams to maintain process adherence and precision.</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="projects">
-        <div class="section-header">
-            <h2 class="section-title">Key <span>Project Portfolio</span></h2>
-        </div>
-        <div class="projects-grid">
-            <div class="project-card">
-                <div class="project-header">
-                    <span class="project-category">Offshore / Vietnam</span>
-                </div>
-                <h4>Gas Centrifugal Compressor Commissioning</h4>
-                <p>Commissioned two gas centrifugal compressors in a high-stakes offshore environment. Validated SIL-3 safety architecture and performed full ESD testing and logic verification.</p>
-                <div class="tag-container">
-                    <span class="tag">PCS 7</span>
-                    <span class="tag">SIL-3</span>
-                    <span class="tag">Offshore</span>
-                </div>
-            </div>
-            <div class="project-card">
-                <div class="project-header">
-                    <span class="project-category">Siemens Energy</span>
-                </div>
-                <h4>Compressor Test Bed (Naroda)</h4>
-                <p>Developed automated testing cycles using TIA Portal and designed WinCC SCADA for real-time monitoring and certificate generation.</p>
-                <div class="tag-container">
-                    <span class="tag">TIA Portal</span>
-                    <span class="tag">WinCC</span>
-                    <span class="tag">Automation</span>
-                </div>
-            </div>
-            <div class="project-card">
-                <div class="project-header">
-                    <span class="project-category">Oil & Gas / UAE</span>
-                </div>
-                <h4>PCS 7 Reciprocating Compressor</h4>
-                <p>Lead engineer for Abu Dhabi Oil Co. project. Configured PCS 7 and SIL-3 safety systems aligned with global safety standards.</p>
-                <div class="tag-container">
-                    <span class="tag">PCS 7</span>
-                    <span class="tag">SIL-3</span>
-                    <span class="tag">ESD</span>
-                </div>
-            </div>
-            <div class="project-card">
-                <div class="project-header">
-                    <span class="project-category">Linde / HRRL</span>
-                </div>
-                <h4>Centrifugal Compressor Commissioning</h4>
-                <p>Executed site commissioning of Siemens PLC and SCADA systems. Performed comprehensive loop checks and integrated VFD drives for motor control.</p>
-                <div class="tag-container">
-                    <span class="tag">Loop Check</span>
-                    <span class="tag">VFD</span>
-                    <span class="tag">Siemens PLC</span>
-                </div>
-            </div>
-            <div class="project-card">
-                <div class="project-header">
-                    <span class="project-category">Telemetry / Adani</span>
-                </div>
-                <h4>SCADA Station Connectivity</h4>
-                <p>Implemented station-wide field signal monitoring using the <strong>DNP-3</strong> protocol to ensure reliable SCADA telemetry for CNG stations.</p>
-                <div class="tag-container">
-                    <span class="tag">DNP-3</span>
-                    <span class="tag">SCADA</span>
-                    <span class="tag">Telemetry</span>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="contact">
-        <div class="section-header">
-            <h2 class="section-title">Get In <span>Touch</span></h2>
-            <p class="section-subtitle">Available for commissioning, consulting, and automation projects worldwide.</p>
-        </div>
-        <div class="contact-grid">
-            <div class="contact-info">
-                <div class="contact-info-card">
-                    <div class="contact-icon"><i class="fas fa-envelope"></i></div>
-                    <div class="contact-details"><span>Official Email</span><p>ritik@matrixautomationservice.com</p></div>
-                </div>
-                <div class="contact-info-card">
-                    <div class="contact-icon"><i class="fas fa-phone"></i></div>
-                    <div class="contact-details"><span>Direct Contact</span><p>+91 7083509050</p></div>
-                </div>
-                <div class="contact-info-card">
-                    <div class="contact-icon"><i class="fas fa-location-dot"></i></div>
-                    <div class="contact-details"><span>Base Location</span><p>Wardha, Maharashtra, India</p></div>
-                </div>
-            </div>
-            <form id="whatsappForm">
-                <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                    <input type="text" id="contactName" class="form-control" placeholder="Your Name" required>
-                    <input type="email" class="form-control" placeholder="Email Address" required>
-                </div>
-                <div class="form-group">
-                    <textarea id="contactMessage" class="form-control" rows="4" placeholder="How can I help with your project?" required></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">
-                    <i class="fab fa-whatsapp"></i> Send via WhatsApp
+            
+            <div class="achievements-list" id="projects">
+                <button class="achievement-card" onclick="openProject('linde')">
+                    <i class="fas fa-vial"></i>
+                    <p>Centrifugal Compressor Commissioning (Linde HRRL).</p>
+                    <span class="view-hint">DETAILS <i class="fas fa-arrow-right"></i></span>
                 </button>
-            </form>
+                <button class="achievement-card" onclick="openProject('vietnam')">
+                    <i class="fas fa-ship"></i>
+                    <p>Commissioned offshore compressor systems in Vietnam (VSP).</p>
+                    <span class="view-hint">DETAILS <i class="fas fa-arrow-right"></i></span>
+                </button>
+                <button class="achievement-card" onclick="openProject('energy')">
+                    <i class="fas fa-cog"></i>
+                    <p>Built automation test beds for Siemens Energy (Naroda).</p>
+                    <span class="view-hint">DETAILS <i class="fas fa-arrow-right"></i></span>
+                </button>
+                <button class="achievement-card" onclick="openProject('uae')">
+                    <i class="fas fa-shield-alt"></i>
+                    <p>Designed SIL-3 ESD safety loops for major UAE Oil assets.</p>
+                    <span class="view-hint">DETAILS <i class="fas fa-arrow-right"></i></span>
+                </button>
+            </div>
         </div>
     </section>
 
-    <footer>
-        <div class="footer-socials">
-            <a href="https://www.linkedin.com/in/ritik-mhaiskar" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
-            <a href="mailto:rmhaiskar07@gmail.com" title="Email"><i class="fas fa-envelope"></i></a>
+    <!-- CONTACT -->
+    <section id="contact">
+        <div class="contact-container">
+            <div class="contact-content">
+                <h2>Let's discuss your next project</h2>
+                <p>I am looking for a challenging role in Pune or remote. Open for relocation and immediate deployment.</p>
+                <div style="margin-top: 2rem;">
+                    <a href="mailto:rmhaiskar07@gmail.com" style="display: flex; align-items: center; gap: 15px; text-decoration: none; color: inherit; margin-bottom: 1rem;">
+                        <i class="fas fa-envelope" style="color: var(--primary-light);"></i> rmhaiskar07@gmail.com
+                    </a>
+                    <a href="tel:+917083509050" style="display: flex; align-items: center; gap: 15px; text-decoration: none; color: inherit;">
+                        <i class="fas fa-phone" style="color: var(--primary-light);"></i> +91 7083509050
+                    </a>
+                </div>
+            </div>
+
+            <div class="message-form">
+                <form id="contactForm" onsubmit="handleMessage(event)">
+                    <div style="margin-bottom:1.5rem">
+                        <label style="display:block; font-size:0.8rem; font-weight:800; color:var(--text-muted); margin-bottom:8px; text-transform:uppercase;">Name</label>
+                        <input type="text" id="senderName" class="form-control" required>
+                    </div>
+                    <div style="margin-bottom:1.5rem">
+                        <label style="display:block; font-size:0.8rem; font-weight:800; color:var(--text-muted); margin-bottom:8px; text-transform:uppercase;">Message</label>
+                        <textarea id="senderMessage" class="form-control" rows="4"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">SEND MESSAGE</button>
+                </form>
+            </div>
         </div>
-        <p>&copy; 2026 Ritik Vilasrao Mhaiskar. All Rights Reserved.</p>
-        <p style="font-size: 0.7rem; margin-top: 0.5rem; opacity: 0.5;">Diploma in Electrical Engineering (2020) | Govt College of Engineering, Arvi</p>
+    </section>
+
+    <!-- MODAL -->
+    <div id="projectModal" class="modal-overlay" onclick="closeOnOverlay(event)">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Project Title</h3>
+                <button class="close-modal" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="modalTag" style="display: inline-block; background: rgba(79, 70, 229, 0.1); color: var(--primary-light); padding: 4px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; margin-bottom: 1rem; text-transform: uppercase;">Location</div>
+                <p id="modalDesc" style="margin-bottom: 1.5rem; font-size: 1.1rem;"></p>
+                <div style="margin-bottom: 1.5rem;">
+                    <h5 style="text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 10px;">Highlights</h5>
+                    <ul id="modalList" style="list-style: none;"></ul>
+                </div>
+                <div class="tech-tags" id="modalTech" style="display: flex; flex-wrap: wrap; gap: 8px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <footer style="text-align: center; padding: 3rem; color: var(--text-muted); border-top: 1px solid var(--border); font-size: 0.85rem;">
+        <p>&copy; 2024 Ritik Mhaiskar | Professional Engineering Portfolio</p>
     </footer>
 
     <script>
-        // Theme Toggle Logic
-        const themeToggle = document.getElementById('themeToggle');
-        const body = document.body;
-        const icon = themeToggle.querySelector('i');
+        // --- BACKGROUND ANIMATION ---
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
 
-        const savedTheme = localStorage.getItem('ritik-theme') || 'dark';
-        body.setAttribute('data-theme', savedTheme);
-        updateIcon(savedTheme);
-
-        themeToggle.addEventListener('click', () => {
-            const currentTheme = body.getAttribute('data-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            body.setAttribute('data-theme', newTheme);
-            localStorage.setItem('ritik-theme', newTheme);
-            updateIcon(newTheme);
-        });
-
-        function updateIcon(theme) {
-            icon.className = theme === 'light' ? 'fas fa-sun' : 'fas fa-moon';
+        function initParticles() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            particles = [];
+            const particleCount = Math.floor(window.innerWidth / 20);
+            for (let i = 0; i < particleCount; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    vx: (Math.random() - 0.5) * 0.5,
+                    vy: (Math.random() - 0.5) * 0.5,
+                    size: Math.random() * 2 + 1
+                });
+            }
         }
 
-        // WhatsApp Redirection Logic
-        document.getElementById('whatsappForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const name = document.getElementById('contactName').value;
-            const message = document.getElementById('contactMessage').value;
-            const phoneNumber = "917083509050";
+        function drawParticles() {
+            const isDark = document.body.getAttribute('data-theme') === 'dark';
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = isDark ? 'rgba(79, 70, 229, 0.4)' : 'rgba(79, 70, 229, 0.15)';
+            ctx.strokeStyle = isDark ? 'rgba(79, 70, 229, 0.15)' : 'rgba(79, 70, 229, 0.05)';
+            ctx.lineWidth = 1;
 
-            const fullMessage = `Hello Ritik,\n\nMy name is ${name}.\n\nProject Inquiry: ${message}`;
-            const encodedMessage = encodeURIComponent(fullMessage);
-            
-            const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
-            window.open(whatsappUrl, '_blank');
+            particles.forEach((p, i) => {
+                p.x += p.vx;
+                p.y += p.vy;
+
+                if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+                if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fill();
+
+                for (let j = i + 1; j < particles.length; j++) {
+                    const p2 = particles[j];
+                    const dx = p.x - p2.x;
+                    const dy = p.y - p2.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 150) {
+                        ctx.beginPath();
+                        ctx.moveTo(p.x, p.y);
+                        ctx.lineTo(p2.x, p2.y);
+                        ctx.stroke();
+                    }
+                }
+            });
+            requestAnimationFrame(drawParticles);
+        }
+
+        window.addEventListener('resize', initParticles);
+        window.addEventListener('load', () => {
+            initParticles();
+            drawParticles();
         });
+
+        const projects = {
+            linde: {
+                title: "Centrifugal Compressor Commissioning",
+                tag: "Linde HRRL | HPCL Rajasthan Refinery",
+                desc: "Led the on-site commissioning of Siemens PLC and SCADA systems for critical centrifugal compressor units.",
+                tech: ["TIA Portal", "S7-1500", "WinCC SCADA", "Siemens PLC"],
+                highlights: [
+                    "Commissioned Siemens PLC and SCADA systems for main control units", 
+                    "Performed comprehensive loop checks for all field instrumentation", 
+                    "Validated complex logic checking for compressor start/stop sequences",
+                    "Ensured system stability and safety compliance during startup"
+                ]
+            },
+            vietnam: {
+                title: "Offshore Compressor Commissioning",
+                tag: "Vietnam | Offshore Rig",
+                desc: "Successfully commissioned gas centrifugal compressors on an offshore platform.",
+                tech: ["PCS 7", "S7-400H", "SIL-3 Safety"],
+                highlights: ["Full loop checking", "ESD safety matrix validation", "Successful SAT leadership"]
+            },
+            energy: {
+                title: "Siemens Energy Test Bed",
+                tag: "Naroda, Gujarat",
+                desc: "Designed a comprehensive test bed system to validate compressor control logic.",
+                tech: ["TIA Portal", "WinCC SCADA", "S7-1500F"],
+                highlights: ["PLC logic for automated testing", "Real-time HMI screens", "Automated test reports"]
+            },
+            uae: {
+                title: "SIL-3 Safety Logic Design",
+                tag: "Abu Dhabi | UAE",
+                desc: "Lead engineer for configuring PCS 7 for reciprocating compressor units.",
+                tech: ["S7-400FH", "Safety Matrix", "PCS 7"],
+                highlights: ["SIL-3 architecture design", "Fail-safe programming", "Safety audit compliance"]
+            }
+        };
+
+        function openProject(id) {
+            const data = projects[id];
+            document.getElementById('modalTitle').innerText = data.title;
+            document.getElementById('modalTag').innerText = data.tag;
+            document.getElementById('modalDesc').innerText = data.desc;
+            document.getElementById('modalList').innerHTML = data.highlights.map(h => `<li style="margin-bottom:8px; font-size: 0.95rem;"><i class="fas fa-check" style="color:var(--secondary); margin-right:10px;"></i> ${h}</li>`).join('');
+            document.getElementById('modalTech').innerHTML = data.tech.map(t => `<span class="tech-tag" style="background:var(--bg-body); border:1px solid var(--border); padding:4px 10px; border-radius:6px; font-size:0.8rem; font-weight:600;">${t}</span>`).join('');
+            document.getElementById('projectModal').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('projectModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        function closeOnOverlay(e) {
+            if (e.target.id === 'projectModal') closeModal();
+        }
+
+        function downloadResume() {
+            const resumeMsg = "The resume file is currently available as a document in the chat history. For a live portfolio, ensure 'Ritik_Mhaiskar_Resume.pdf' is uploaded to the root directory.";
+            const customModal = document.createElement('div');
+            customModal.style = "position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background:var(--bg-card); padding:2rem; border-radius:12px; border:1px solid var(--primary); z-index:3000; text-align:center; box-shadow:0 0 50px rgba(0,0,0,0.5); width:90%; max-width:400px;";
+            customModal.innerHTML = `<p style="margin-bottom:1.5rem">${resumeMsg}</p><button onclick="this.parentElement.remove()" class="btn btn-primary">Got it</button>`;
+            document.body.appendChild(customModal);
+        }
+
+        function handleMessage(e) {
+            e.preventDefault();
+            const name = document.getElementById('senderName').value;
+            const msg = document.getElementById('senderMessage').value;
+            window.location.href = `mailto:rmhaiskar07@gmail.com?subject=Job Inquiry from ${name}&body=${encodeURIComponent(msg)}`;
+        }
+
+        const themeBtn = document.getElementById('themeToggle');
+        themeBtn.addEventListener('click', () => {
+            const current = document.body.getAttribute('data-theme');
+            const target = current === 'dark' ? 'light' : 'dark';
+            document.body.setAttribute('data-theme', target);
+            themeBtn.innerHTML = target === 'dark' ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
+        });
+
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 50) nav.classList.add('scrolled');
+            else nav.classList.remove('scrolled');
+        });
+
+        ScrollReveal().reveal('.hero-content', { delay: 100, origin: 'left', distance: '30px' });
+        ScrollReveal().reveal('.resume-summary', { delay: 300, origin: 'right', distance: '30px' });
+        ScrollReveal().reveal('.achievement-card', { interval: 100, origin: 'bottom', distance: '20px' });
     </script>
 </body>
 </html>
